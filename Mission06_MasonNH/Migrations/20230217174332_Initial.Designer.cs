@@ -8,7 +8,7 @@ using Mission06_MasonNH.Models;
 namespace Mission06_MasonNH.Migrations
 {
     [DbContext(typeof(MovieContext))]
-    [Migration("20230213182557_Initial")]
+    [Migration("20230217174332_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -17,15 +17,40 @@ namespace Mission06_MasonNH.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.32");
 
+            modelBuilder.Entity("Mission06_MasonNH.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryName = "Comedy"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryName = "Family"
+                        });
+                });
+
             modelBuilder.Entity("Mission06_MasonNH.Models.Movie", b =>
                 {
                     b.Property<int>("MovieId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("category")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("director")
                         .IsRequired()
@@ -54,13 +79,15 @@ namespace Mission06_MasonNH.Migrations
 
                     b.HasKey("MovieId");
 
-                    b.ToTable("responses");
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Responses");
 
                     b.HasData(
                         new
                         {
                             MovieId = 1,
-                            category = "Comedy",
+                            CategoryId = 1,
                             director = "Akiva Schaffer",
                             edited = false,
                             rating = "PG-13",
@@ -70,7 +97,7 @@ namespace Mission06_MasonNH.Migrations
                         new
                         {
                             MovieId = 2,
-                            category = "Family",
+                            CategoryId = 2,
                             director = "Tom McGrath",
                             edited = false,
                             rating = "PG",
@@ -80,13 +107,22 @@ namespace Mission06_MasonNH.Migrations
                         new
                         {
                             MovieId = 3,
-                            category = "Family",
+                            CategoryId = 2,
                             director = "Brad Bird",
                             edited = false,
                             rating = "PG",
                             title = "The Incredibles",
                             year = 2004
                         });
+                });
+
+            modelBuilder.Entity("Mission06_MasonNH.Models.Movie", b =>
+                {
+                    b.HasOne("Mission06_MasonNH.Models.Category", "category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

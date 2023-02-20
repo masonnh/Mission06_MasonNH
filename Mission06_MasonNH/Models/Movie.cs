@@ -12,8 +12,10 @@ namespace Mission06_MasonNH.Models
         [Required]
         public int MovieId { get; set; }
 
+        // build foreign key relationship
         [Required]
-        public string category { get; set; }
+        public int CategoryId { get; set; }
+        public Category category { get; set; }
         
         [Required]
         public string title { get; set; }
